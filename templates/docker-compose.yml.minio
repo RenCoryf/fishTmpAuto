@@ -1,0 +1,28 @@
+    minio:
+        networks:
+            - net
+        image: minio/minio:latest
+        container_name: minio
+        command: server /data --console-address ":9001"
+        env_file:
+            - .env
+        ports:
+            - "9000:9000" # основной API (S3)
+            - "9001:9001" # веб-консоль MinIO
+        volumes:
+            - minio_data:/data
+        restart: unless-stopped
+
+        healthcheck:
+            test:
+                ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+            interval: 30s
+            timeout: 10s
+            retries: 5
+            start_period: 10s
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "5m"
+                max-file: "5"
+				# Do not forget about volumes
