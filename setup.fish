@@ -27,7 +27,15 @@ function setup
 				mv docker-compose.yml.base_web_app docker-compose.yml
 				mkdir app
 				mv main.py app/
-
+				cd app
+				touch __init__.py
+				for directory in repositories utils api models models/dto models/tables services core containers
+					mkdir $directory
+					touch $directory/__init__.py 
+				end
+				cd core
+				touch database.py config.py
+				cd ../../
     else
         set src_file ~/.dev_utils/templates/python/docker-compose.yml.$target
 
